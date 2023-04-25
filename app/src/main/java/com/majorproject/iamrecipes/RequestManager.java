@@ -3,7 +3,9 @@ package com.majorproject.iamrecipes;
 import android.content.Context;
 
 import com.majorproject.iamrecipes.Listener.RandomRecipeResponseListener;
+import com.majorproject.iamrecipes.Listener.RecipeDetailsListener;
 import com.majorproject.iamrecipes.Models.RandomRecipeApiResponse;
+import com.majorproject.iamrecipes.Models.RecipesDetailsResponse;
 
 import java.util.List;
 
@@ -13,6 +15,7 @@ import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 import retrofit2.http.GET;
+import retrofit2.http.Path;
 import retrofit2.http.Query;
 
 public class RequestManager {
@@ -46,12 +49,38 @@ public class RequestManager {
         });
     }
 
+    public void getRecipeDetails(RecipeDetailsListener listener,int id){
+        CallRecipeDetails callRecipeDetails = retrofit.create(CallRecipeDetails.class);
+        Call<RecipesDetailsResponse> call = callRecipeDetails.callRecipeDetails(id, context.getString(R.string.api_key));
+        call.enqueue(new Callback<RecipesDetailsResponse>() {
+            @Override
+            public void onResponse(Call<RecipesDetailsResponse> call, Response<RecipesDetailsResponse> response) {
+                if (!response.isSuccessful()){
+                    listener.didError(response.message());
+                }
+                listener.didFetch(response.body(), response.message());
+            }
+            @Override
+            public void onFailure(Call<RecipesDetailsResponse> call, Throwable t) {
+                listener.didError(t.getMessage());
+            }
+        });
+    }
+
     private interface CallRandomRecipes{
         @GET("recipes/random")
         Call<RandomRecipeApiResponse> callRandomRecipe(
                 @Query("apiKey") String apiKey,
                 @Query("number") String number,
                 @Query("tags")  List<String> tags
+        );
+    }
+
+    private interface CallRecipeDetails{
+        @GET("recipes/{id}/information")
+        Call<RecipesDetailsResponse> callRecipeDetails(
+                @Path("id") int id,
+                @Query("apiKey") String apikey
         );
     }
 }

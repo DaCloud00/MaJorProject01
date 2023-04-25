@@ -7,10 +7,13 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import androidx.recyclerview.widget.RecyclerView;
+
 import androidx.annotation.NonNull;
 import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.majorproject.iamrecipes.Listener.RecipeClickListener;
 import com.majorproject.iamrecipes.Models.ExtendedIngredient;
 import com.majorproject.iamrecipes.Models.Recipe;
 import com.majorproject.iamrecipes.R;
@@ -21,10 +24,12 @@ import java.util.List;
 public class RandomRecipeAdapter extends RecyclerView.Adapter<RandomRecipeViewHolder>{
     Context context;
     List<Recipe> list;
+    RecipeClickListener listener;
 
-    public RandomRecipeAdapter(Context context, List<Recipe> list){
+    public RandomRecipeAdapter(Context context, List<Recipe> list, RecipeClickListener listener){
         this.context = context;
         this.list = list;
+        this.listener = listener;
     }
     @NonNull
     @Override
@@ -41,14 +46,21 @@ public class RandomRecipeAdapter extends RecyclerView.Adapter<RandomRecipeViewHo
         holder.textView_time.setText(list.get(position).readyInMinutes+"Minutes");
         Picasso.get().load(list.get(position).image).into(holder.imageView_food);
 
+        holder.random_list_container.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                listener.onRecipesClicked(String.valueOf(list.get(holder.getBindingAdapterPosition()).id)) ;
+            }
+        });
     }
-
     @Override
     public int getItemCount() {
         return list.size();
     }
 }
 class RandomRecipeViewHolder extends RecyclerView.ViewHolder {
+
+
     CardView random_list_container;
     TextView textView_title, textView_servings, textView_like, textView_time;
     ImageView imageView_food;
