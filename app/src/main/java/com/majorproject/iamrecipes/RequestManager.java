@@ -2,10 +2,14 @@ package com.majorproject.iamrecipes;
 
 import android.content.Context;
 
+import com.majorproject.iamrecipes.Listener.InstructionListener;
 import com.majorproject.iamrecipes.Listener.RandomRecipeResponseListener;
 import com.majorproject.iamrecipes.Listener.RecipeDetailsListener;
+import com.majorproject.iamrecipes.Listener.SimilarRecipesListener;
+import com.majorproject.iamrecipes.Models.InstructionsResponse;
 import com.majorproject.iamrecipes.Models.RandomRecipeApiResponse;
 import com.majorproject.iamrecipes.Models.RecipesDetailsResponse;
+import com.majorproject.iamrecipes.Models.SimilarRecipesResponse;
 
 import java.util.List;
 
@@ -48,8 +52,7 @@ public class RequestManager {
             }
         });
     }
-
-    public void getRecipeDetails(RecipeDetailsListener listener,int id){
+    public void getRecipeDetails(RecipeDetailsListener listener, int id){
         CallRecipeDetails callRecipeDetails = retrofit.create(CallRecipeDetails.class);
         Call<RecipesDetailsResponse> call = callRecipeDetails.callRecipeDetails(id, context.getString(R.string.api_key));
         call.enqueue(new Callback<RecipesDetailsResponse>() {
@@ -60,9 +63,54 @@ public class RequestManager {
                 }
                 listener.didFetch(response.body(), response.message());
             }
+
             @Override
             public void onFailure(Call<RecipesDetailsResponse> call, Throwable t) {
                 listener.didError(t.getMessage());
+
+            }
+        });
+
+    }
+    public void getSimilarRecipes(SimilarRecipesListener listener, int id){
+        CallSimilarRecipes callSimilarRecipes = retrofit.create(CallSimilarRecipes.class);
+        Call<List<SimilarRecipesResponse>> call = callSimilarRecipes.callSimilarRecipes(id, "7", context.getString(R.string.api_key));
+        call.enqueue(new Callback<List<SimilarRecipesResponse>>() {
+            @Override
+            public void onResponse(Call<List<SimilarRecipesResponse>> call, Response<List<SimilarRecipesResponse>> response) {
+                if (!response.isSuccessful()){
+                    listener.didError(response.message());
+                    return;
+                }
+                listener.didFetch(response.body(), response.message());
+            }
+            @Override
+            public void onFailure(Call<List<SimilarRecipesResponse>> call, Throwable t) {
+                listener.didError(t.getMessage());
+
+
+            }
+        });
+    }
+
+    public void getInstructions(InstructionListener listener, int id){
+        Callinstructions callinstructions = retrofit.create(Callinstructions.class);
+        Call<List<InstructionsResponse>> call = callinstructions.callInstructions(id, context.getString(R.string.api_key));
+        call.enqueue(new Callback<List<InstructionsResponse>>() {
+            @Override
+            public void onResponse(Call<List<InstructionsResponse>> call, Response<List<InstructionsResponse>> response) {
+                if (!response.isSuccessful()){
+                    listener.didError(response.message());
+                    return;
+                }
+                listener.didFetch(response.body(), response.message());
+            }
+
+            @Override
+            public void onFailure(Call<List<InstructionsResponse>> call, Throwable t) {
+
+                listener.didError(t.getMessage());
+
             }
         });
     }
@@ -81,6 +129,22 @@ public class RequestManager {
         Call<RecipesDetailsResponse> callRecipeDetails(
                 @Path("id") int id,
                 @Query("apiKey") String apikey
+        );
+    }
+
+    private interface CallSimilarRecipes{
+        @GET("recipes/{id}/similar")
+        Call<List<SimilarRecipesResponse>> callSimilarRecipes(
+                @Path("id") int id,
+                @Query("number") String number,
+                @Query("apiKey") String apiKey
+        );
+    }
+    private interface Callinstructions{
+        @GET("recipes/{id}/analyzedInstructions")
+        Call<List<InstructionsResponse>> callInstructions(
+                @Path("id") int id,
+                @Query("apiKey") String apiKey
         );
     }
 }
