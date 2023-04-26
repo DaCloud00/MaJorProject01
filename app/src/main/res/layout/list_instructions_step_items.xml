@@ -11,7 +11,7 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
         <ImageView
-            android:id="@+id/image_instruction_step_items"
+            android:id="@+id/imageView_instruction_step_items"
             android:scaleType="center"
             android:layout_width="100dp"
             android:layout_height="60dp"/>
