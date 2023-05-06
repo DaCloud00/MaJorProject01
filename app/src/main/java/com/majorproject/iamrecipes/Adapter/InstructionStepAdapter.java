@@ -7,6 +7,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+//import androidx.collection.CircularArray;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -34,6 +35,7 @@ public class InstructionStepAdapter extends RecyclerView.Adapter<InstructionStep
     public void onBindViewHolder(@NonNull InstructionStepViewHolder holder, int position) {
 
         holder.textView_instructions_step_number.setText(String.valueOf(list.get(position).number));
+
         holder.textView_instructions_step_title.setText(list.get(position).step);
 
         holder.recycler_instruction_ingredients.setHasFixedSize(true);

@@ -54,7 +54,7 @@ class InstructionsEquipmentsViewHolder extends RecyclerView.ViewHolder{
     public InstructionsEquipmentsViewHolder(@NonNull View itemView) {
         super(itemView);
         imageView_instruction_step_items = itemView.findViewById(R.id.imageView_instruction_step_items);
-        textview_instructions_step_items = itemView.findViewById(R.id.textview_instructions_step_items);
+        textview_instructions_step_items = itemView.findViewById(R.id.textView_instructions_step_items);
     }
 
 }

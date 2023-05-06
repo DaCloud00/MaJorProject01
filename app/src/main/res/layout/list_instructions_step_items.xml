@@ -16,10 +16,10 @@
             android:layout_width="100dp"
             android:layout_height="60dp"/>
         <TextView
-            android:id="@+id/textview_instructions_step_items"
-            android:textStyle="bold"
+            android:id="@+id/textView_instructions_step_items"
+            android:textStyle="italic"
             android:textSize="18sp"
-            android:text="Item"
+            android:text="Items"
             android:textAlignment="center"
             android:textColor="@color/black"
             android:padding="4dp"
